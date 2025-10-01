@@ -1,28 +1,23 @@
 // Updated Locket_fix.js
-// ========= Đặt ngày tham gia là 2/9/2025 ========= //
-var specificDate = "2007-02-06T00:00:00Z"; // Định dạng ISO 8601
+// ========= Đặt ngày tham gia là 02/09/2025 ========= //
+var specificDate = "2025-09-02T00:00:00Z"; // Định dạng ISO 8601
 
 // ========= ID Mapping ========= //
 const mapping = {
-  '%E8%BD%A6%E7%A5%A8%E7%A5%A8': ['vip+watch_vip'],
-  'Locket': ['Gold'] // Đảm bảo rằng Locket Gold được sử dụng đúng cách
+  '%E8%BD%A6%E7%A5%A8%E7%A5%A8': ['vip+watch_vip', 'com.hasukatsu.premium.yearly'],
+  'Locket': ['Gold', 'com.hasukatsu.premium.yearly']
 };
 
 // ========= Kiểm tra và Khởi tạo ========= //
 var ua = $request.headers["User-Agent"] || $request.headers["user-agent"];
 
-// Bắt lỗi khi parsing response
+var obj;
 try {
-  var obj = JSON.parse($response.body);
+  obj = JSON.parse($response.body);
 } catch (e) {
-  console.log("Error parsing response body:", e);
-  $done({}); // Trả kết quả trống nếu lỗi xảy ra
+  console.log("❌ Error parsing response body:", e.message);
+  obj = { subscriber: { entitlements: {}, subscriptions: {} } };
 }
-
-// Đảm bảo các key cơ bản tồn tại
-if (!obj.subscriber) obj.subscriber = {};
-if (!obj.subscriber.entitlements) obj.subscriber.entitlements = {};
-if (!obj.subscriber.subscriptions) obj.subscriber.subscriptions = {};
 
 // ========= Tạo thông tin gói Locket Gold ========= //
 var hasu = {
@@ -30,33 +25,31 @@ var hasu = {
   ownership_type: "PURCHASED",
   billing_issues_detected_at: null,
   period_type: "normal",
-  expires_date: "2099-12-18T01:04:17Z", // Ngày hết hạn lâu dài
+  expires_date: "2099-12-18T01:04:17Z",
   grace_period_expires_date: null,
   unsubscribe_detected_at: null,
-  original_purchase_date: specificDate,  // Ngày tham gia
-  purchase_date: specificDate,          // Ngày mua
+  original_purchase_date: specificDate,
+  purchase_date: specificDate,
   store: "app_store"
 };
 
 var hasu_entitlement = {
   grace_period_expires_date: null,
-  purchase_date: specificDate, // Ngày tham gia
+  purchase_date: specificDate,
   product_identifier: "com.hasukatsu.premium.yearly",
-  expires_date: "2099-12-18T01:04:17Z" // Ngày hết hạn lâu dài
+  expires_date: "2099-12-18T01:04:17Z"
 };
 
 // ========= Áp dụng Mapping ========= //
 const match = Object.keys(mapping).find(e => ua.includes(e));
 
 if (match) {
-  let entitlementKey = mapping[match][0] || "Locket";
-  let subscriptionKey = mapping[match][1] || "com.hasukatsu.premium.yearly";
-
+  let [entitlementKey, subscriptionKey] = mapping[match];
   obj.subscriber.subscriptions[subscriptionKey] = hasu;
   obj.subscriber.entitlements[entitlementKey] = hasu_entitlement;
 } else {
-  // Gán mặc định nếu không có khớp
   obj.subscriber.subscriptions["com.hasukatsu.premium.yearly"] = hasu;
   obj.subscriber.entitlements["Locket"] = hasu_entitlement;
 }
 
+$done({ body: JSON.stringify(obj) });
