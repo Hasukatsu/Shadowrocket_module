@@ -52,8 +52,8 @@ if (match) {
   let entitlementKey = mapping[match][0] || "Locket";
   let subscriptionKey = mapping[match][1] || "com.hasukatsu.premium.yearly";
 
-  obj.subscriber.subscriptions[subscriptionKey] = xunn;
-  obj.subscriber.entitlements[entitlementKey] = xunn_entitlement;
+  obj.subscriber.subscriptions[subscriptionKey] = hasu;
+  obj.subscriber.entitlements[entitlementKey] = hasu_entitlement;
 } else {
   // Gán mặc định nếu không có khớp
   obj.subscriber.subscriptions["com.hasukatsu.premium.yearly"] = hasu;
