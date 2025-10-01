@@ -41,7 +41,7 @@ var hasu = {
 var hasu_entitlement = {
   grace_period_expires_date: null,
   purchase_date: specificDate, // Ngày tham gia
-  product_identifier: "com.xunn.premium.yearly",
+  product_identifier: "com.hasukatsu.premium.yearly",
   expires_date: "2099-12-18T01:04:17Z" // Ngày hết hạn lâu dài
 };
 
