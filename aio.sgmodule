@@ -1,8 +1,6 @@
-#Locket_Gold
-
-#!name=Locket Gold 
-#!desc=Mở khoá premium cho ứng dụng Locket Widget by Hasu
-#!version= 1
+#!name=All-in-One Premium - Nightmarket
+#!desc=Chặn quảng cáo YouTube + Unlock Locket Gold + Spotify Plus  
+#!tag=YouTube, Locket, Spotify, Premium, Adblock
 
 [General]
 user-agent = Locket/1.0.0 (iPhone; iOS 26; Scale/3.00)
